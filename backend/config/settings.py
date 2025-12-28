@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'corsheaders',
     
     'accounts.apps.AccountsConfig',
+    'garage.apps.GarageConfig',
+    'supplier.apps.SupplierConfig',
     
 ]
 
@@ -62,7 +64,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
