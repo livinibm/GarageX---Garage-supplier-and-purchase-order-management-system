@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Dashboard.css';
 
 const SupplierDashboard = ({ user, onLogout }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>Supplier Dashboard</h1>
         <div className="user-info">
-          <span>Welcome, {user.first_name} {user.last_name} (Supplier)</span>
+          {user.role === 'ADMIN' && (
+            <button className="nav-btn" onClick={() => navigate('/')}>
+              ← Admin Dashboard
+            </button>
+          )}
+          <span>Welcome, {user.first_name} {user.last_name} ({user.role === 'ADMIN' ? 'Admin' : 'Supplier'})</span>
           <button onClick={onLogout}>Logout</button>
         </div>
       </header>

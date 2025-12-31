@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Dashboard.css';
 
 const GarageDashboard = ({ user, onLogout }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>Garage Dashboard</h1>
         <div className="user-info">
-          <span>Welcome, {user.first_name} {user.last_name} (Garage Staff)</span>
+          {user.role === 'ADMIN' && (
+            <button className="nav-btn" onClick={() => navigate('/')}>
+              ← Admin Dashboard
+            </button>
+          )}
+          <span>Welcome, {user.first_name} {user.last_name} ({user.role === 'ADMIN' ? 'Admin' : 'Garage Staff'})</span>
           <button onClick={onLogout}>Logout</button>
         </div>
       </header>

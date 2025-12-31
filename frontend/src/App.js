@@ -76,6 +76,13 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={renderDashboard()} />
+          {/* Admin can access all dashboards */}
+          {user.role === 'ADMIN' && (
+            <>
+              <Route path="/garage" element={<GarageDashboard user={user} onLogout={handleLogout} />} />
+              <Route path="/supplier" element={<SupplierDashboard user={user} onLogout={handleLogout} />} />
+            </>
+          )}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
