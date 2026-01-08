@@ -4,7 +4,7 @@ import axios from 'axios';
 import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
 import GarageDashboard from './components/GarageDashboard';
-import SupplierDashboard from './components/SupplierDashboard';
+import SupplierDashboard from '../src/pages/supplierDashbord/SupplierDashboard';
 import './App.css';
 
 // Configure axios to use the backend URL
