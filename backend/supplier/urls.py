@@ -6,6 +6,7 @@ from .services.supplier_service import (
     get_purchase_orders, get_purchase_order_by_id, create_purchase_order, update_purchase_order,
     get_supplier_parts
 )
+from .serializers import SupplierSerializer, PartSerializer, PurchaseOrderSerializer
 from utils.http_responses import success_response, error_response, not_found_response, created_response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -16,7 +17,8 @@ from utils.permissions import IsAdmin, IsSupplier, IsAdminOrSupplier
 @permission_classes([IsAuthenticated])
 def list_suppliers(request):
     suppliers = get_all_suppliers()
-    return success_response(suppliers, "Suppliers retrieved successfully")
+    serializer = SupplierSerializer(suppliers, many=True)
+    return success_response(serializer.data, "Suppliers retrieved successfully")
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -24,7 +26,8 @@ def get_supplier(request, supplier_id):
     supplier = get_supplier_by_id(supplier_id)
     if supplier is None:
         return not_found_response("Supplier not found")
-    return success_response(supplier, "Supplier retrieved successfully")
+    serializer = SupplierSerializer(supplier)
+    return success_response(serializer.data, "Supplier retrieved successfully")
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdmin])
@@ -47,7 +50,8 @@ def update_supplier(request, supplier_id):
 @permission_classes([IsAuthenticated])
 def list_parts(request):
     parts = get_all_parts()
-    return success_response(parts, "Parts retrieved successfully")
+    serializer = PartSerializer(parts, many=True)
+    return success_response(serializer.data, "Parts retrieved successfully")
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -55,7 +59,8 @@ def get_part(request, part_id):
     part = get_part_by_id(part_id)
     if part is None:
         return not_found_response("Part not found")
-    return success_response(part, "Part retrieved successfully")
+    serializer = PartSerializer(part)
+    return success_response(serializer.data, "Part retrieved successfully")
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrSupplier])
@@ -85,14 +90,16 @@ def delete_part(request, part_id):
 @permission_classes([IsAuthenticated, IsSupplier])
 def list_my_parts(request):
     parts = get_supplier_parts(request.user)
-    return success_response(parts, "My parts retrieved successfully")
+    serializer = PartSerializer(parts, many=True)
+    return success_response(serializer.data, "My parts retrieved successfully")
 
 # Purchase order endpoints
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_purchase_orders(request):
     orders = get_purchase_orders(request.user)
-    return success_response(orders, "Purchase orders retrieved successfully")
+    serializer = PurchaseOrderSerializer(orders, many=True)
+    return success_response(serializer.data, "Purchase orders retrieved successfully")
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -100,7 +107,8 @@ def get_purchase_order(request, order_id):
     order = get_purchase_order_by_id(order_id, request.user)
     if order is None:
         return not_found_response("Purchase order not found")
-    return success_response(order, "Purchase order retrieved successfully")
+    serializer = PurchaseOrderSerializer(order)
+    return success_response(serializer.data, "Purchase order retrieved successfully")
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrSupplier])

@@ -17,8 +17,10 @@ urlpatterns = [
 
     # Include app URLs
     path('api/accounts/', include('accounts.urls')),
+    path('api/notifications/', include('supplier.api_urls')),
     path('garage/', include('garage.urls')),
     path('supplier/', include('supplier.urls')),
+    path('api/', include('payment.urls')),
 
     # Session auth endpoints for DRF browsable API
     path('api-auth/', include('rest_framework.urls')),
