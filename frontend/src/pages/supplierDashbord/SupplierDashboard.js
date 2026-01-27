@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import '../../styles/supplierDashbord/SupplierDashboard.css';
 
 const SupplierDashboard = ({ user, onLogout }) => {
@@ -9,41 +8,44 @@ const SupplierDashboard = ({ user, onLogout }) => {
   return (
     <div className="dashboard">
       <header className="dashboard-header">
-        <h1>Supplier Dashboard</h1>
+        <h1 className='logo-head'>GarageX</h1>
         <div className="user-info">
-          {user.role === 'ADMIN' && (
-            <button className="nav-btn" onClick={() => navigate('/')}>
-              ← Admin Dashboard
-            </button>
+          {user?.role === 'ADMIN' && (
+            <button className="nav-btn" onClick={() => navigate('/')}>← Admin Dashboard</button>
           )}
-          <span>Welcome, {user.first_name} {user.last_name} ({user.role === 'ADMIN' ? 'Admin' : 'Supplier'})</span>
-          <button onClick={onLogout}>Logout</button>
+          <button className="logout-btn" onClick={onLogout}>Logout</button>
         </div>
       </header>
 
       <main className="dashboard-content">
         <div className="welcome-card">
           <h2>Welcome to GarageX</h2>
-          <p>Manage your spare parts catalog and purchase orders.</p>
+          <span className="user-welcome">
+            {user?.first_name} {user?.last_name} ({user?.role})
+          </span>
         </div>
 
         <div className="dashboard-grid">
+          {/* PRODUCT MANAGEMENT CARD */}
           <div className="dashboard-card">
+            <div className="card-icon" style={{fontSize: '40px'}}>📦</div>
             <h3>My Products</h3>
             <p>Add and manage your spare parts inventory</p>
-            <button className="card-btn">Manage Products</button>
+            {/* Navigates specifically to Product Management */}
+            <button className="card-btn" onClick={() => navigate('/product-management')}>
+                Manage Products
+            </button>
           </div>
-          
+
+          {/* SUPPLIER MANAGEMENT CARD */}
           <div className="dashboard-card">
-            <h3>Purchase Orders</h3>
-            <p>View orders from garages and manage fulfillment</p>
-            <button className="card-btn">View Orders</button>
-          </div>
-          
-          <div className="dashboard-card">
-            <h3>Analytics</h3>
-            <p>View sales reports and performance metrics</p>
-            <button className="card-btn">View Analytics</button>
+            <div className="card-icon" style={{fontSize: '40px'}}>🏢</div>
+            <h3>Supplier Directory</h3>
+            <p>View and manage supplier contact details</p>
+            {/* Navigates specifically to Supplier Management */}
+            <button className="card-btn" onClick={() => navigate('/supplier-management')}>
+                Manage Suppliers
+            </button>
           </div>
         </div>
       </main>

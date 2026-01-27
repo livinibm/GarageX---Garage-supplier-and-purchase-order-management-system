@@ -28,6 +28,10 @@ const AdminDashboard = ({ user, onLogout }) => {
   const navigateToSupplierDashboard = () => {
     navigate('/supplier');
   };
+
+  const navigateToInventory = () => {
+    navigate('/inventory');
+  };
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -174,6 +178,10 @@ const AdminDashboard = ({ user, onLogout }) => {
           <button className="nav-btn" onClick={navigateToSupplierDashboard}>
             <i className="icon">📦</i>
             Supplier Dashboard
+          </button>
+          <button className="nav-btn" onClick={navigateToInventory}>
+            <i className="icon">📋</i>
+            Inventory Management
           </button>
         </div>
         <div className="nav-info">

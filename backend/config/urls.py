@@ -8,7 +8,7 @@ def home(request):
     return JsonResponse({"message": "Welcome to GarageX API!"})
 
 urlpatterns = [
-    path('', home, name='home'),  # Root URL
+    path('', home, name='home'),  
     path('admin/', admin.site.urls),
 
     # JWT token endpoints
@@ -17,10 +17,12 @@ urlpatterns = [
 
     # Include app URLs
     path('api/accounts/', include('accounts.urls')),
-    path('garage/', include('garage.urls')),
-    path('supplier/', include('supplier.urls')),
+    path('api/', include('supplier.purchase_order_urls')),
+    
+    # --- UPDATE THESE TWO LINES ONLY ---
+    path('api/garage/', include('garage.urls')),    # Added 'api/'
+    path('api/supplier/', include('supplier.urls')), # Added 'api/'
+    # ------------------------------------
 
-    # Session auth endpoints for DRF browsable API
     path('api-auth/', include('rest_framework.urls')),
-
 ]

@@ -1,73 +1,95 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 class Supplier(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    company_name = models.CharField(max_length=200)
-    contact_person = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15)
-    email = models.EmailField()
-    address = models.TextField()
-    is_active = models.BooleanField(default=True)
-    
-    def __str__(self):
-        return self.company_name
 
-class Part(models.Model):
-    PART_TYPES = (
-        ('ENGINE', 'Engine Parts'),
-        ('BRAKE', 'Brake System'),
-        ('ELECTRICAL', 'Electrical Components'),
-        ('SUSPENSION', 'Suspension'),
-        ('TRANSMISSION', 'Transmission'),
-        ('BODY', 'Body Parts'),
-        ('OTHER', 'Other'),
-    )
-    
-    name = models.CharField(max_length=100)
-    part_number = models.CharField(max_length=50, unique=True)
-    description = models.TextField(blank=True)
-    part_type = models.CharField(max_length=20, choices=PART_TYPES)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock_quantity = models.IntegerField(default=0)
-    min_stock_level = models.IntegerField(default=5)
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=True)
-    
+    supplier_id = models.AutoField(primary_key=True, db_column='supplier_id') 
+    supplier_name = models.CharField(max_length=100, db_column='supplier_name')
+    contact_email = models.EmailField(db_column='contact_email', null=True, blank=True)
+    phone_number = models.CharField(max_length=20, db_column='phone_number', null=True, blank=True)
+    address = models.TextField(db_column='address', null=True, blank=True)
+    is_active = models.BooleanField(default=True, db_column='is_active')
+
+    class Meta:
+        db_table = 'suppliers'  
+
     def __str__(self):
-        return f"{self.name} ({self.part_number})"
+        return self.supplier_name
+
+class SparePart(models.Model):
+    part_id = models.AutoField(primary_key=True, db_column='part_id')
+    part_name = models.CharField(max_length=100, db_column='part_name')
+    sku_code = models.CharField(max_length=50, unique=True, db_column='sku_code')
+   
+    description = models.TextField(null=True, blank=True, db_column='description')
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2, db_column='unit_price')
+    current_stock = models.IntegerField(default=0, db_column='current_stock')
+    
+  
+    supplier = models.ForeignKey(
+        Supplier, 
+        on_delete=models.CASCADE, 
+        related_name='parts', 
+        db_column='supplier_id'
+    )
+
+    class Meta:
+        db_table = 'spare_parts'
+
+# Banuka Start
+class Users(models.Model):
+    user_id = models.AutoField(primary_key=True, db_column='user_id')
+    username = models.CharField(unique=True, max_length=50, db_column='username')
+    password_hash = models.CharField(max_length=255, db_column='password_hash')
+    role = models.CharField(max_length=12, db_column='role')
+    created_at = models.DateTimeField(auto_now_add=True, db_column='created_at')
+
+    class Meta:
+        managed = False
+        db_table = 'users'
+
+    def __str__(self):
+        return self.username
 
 class PurchaseOrder(models.Model):
     STATUS_CHOICES = (
-        ('PENDING', 'Pending'),
-        ('APPROVED', 'Approved'),
-        ('ORDERED', 'Ordered'),
-        ('RECEIVED', 'Received'),
-        ('CANCELLED', 'Cancelled'),
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled'),
     )
-    
-    order_number = models.CharField(max_length=20, unique=True)
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
-    ordered_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    order_date = models.DateTimeField(auto_now_add=True)
-    expected_delivery_date = models.DateTimeField(null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
-    total_amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-    notes = models.TextField(blank=True)
-    
+
+    order_id = models.AutoField(primary_key=True, db_column='order_id')
+    po_reference_number = models.CharField(max_length=20, unique=True, db_column='po_reference_number')
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='purchase_orders', db_column='supplier_id')
+    created_by_user = models.ForeignKey(Users, on_delete=models.DO_NOTHING, db_column='created_by_user_id')
+    order_date = models.DateTimeField(auto_now_add=True, db_column='order_date')
+    expected_delivery_date = models.DateField(null=True, blank=True, db_column='expected_delivery_date')
+    total_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0.00, db_column='total_amount')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending', db_column='status')
+    approved_at = models.DateTimeField(null=True, blank=True, db_column='approved_at')
+    delivered_at = models.DateTimeField(null=True, blank=True, db_column='delivered_at')
+
+    class Meta:
+        db_table = 'purchase_orders'
+        ordering = ['-order_date']
+
     def __str__(self):
-        return f"PO-{self.order_number}"
+        return f"PO-{self.order_id} ({self.po_reference_number})"
 
 class PurchaseOrderItem(models.Model):
-    purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, related_name='items')
-    part = models.ForeignKey(Part, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    
-    def save(self, *args, **kwargs):
-        self.total_price = self.quantity * self.unit_price
-        super().save(*args, **kwargs)
-    
+    item_id = models.AutoField(primary_key=True, db_column='item_id')
+    purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, related_name='items', db_column='order_id')
+    spare_part = models.ForeignKey(SparePart, on_delete=models.CASCADE, db_column='part_id')
+    quantity = models.IntegerField(db_column='quantity')
+    agreed_price = models.DecimalField(max_digits=10, decimal_places=2, db_column='agreed_price')
+    # line_total is a generated column in DB, removing from model to prevent INSERT errors
+    # line_total = models.DecimalField(max_digits=15, decimal_places=2, db_column='line_total', editable=False, null=True)
+
+    class Meta:
+        db_table = 'purchase_order_items'
+
     def __str__(self):
-        return f"{self.part.name} x {self.quantity}"
+        return f"{self.quantity} x {self.spare_part.part_name} (PO-{self.purchase_order.order_id})"
+
+# Banuka End

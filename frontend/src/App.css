@@ -1,5 +1,23 @@
+/* 1. Global Reset - This removes the white window margins */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden; /* Prevents side scrolling */
+}
+
+/* 2. Ensure the App container fills the whole screen */
 .App {
   text-align: center;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 .loading {
@@ -11,53 +29,25 @@
   color: #666;
 }
 
+/* The rest of your existing styles... */
 .welcome-card {
   background: white;
   padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   margin-bottom: 2rem;
-}
-
-.welcome-card h2 {
-  color: #333;
-  margin-top: 0;
+  /* Removed shadow as requested earlier */
 }
 
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
+  padding: 20px; /* Added some inner padding for cards */
 }
 
 .dashboard-card {
   background: white;
   padding: 1.5rem;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   text-align: left;
-}
-
-.dashboard-card h3 {
-  color: #333;
-  margin-top: 0;
-}
-
-.dashboard-card p {
-  color: #666;
-  margin-bottom: 1rem;
-}
-
-.card-btn {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.card-btn:hover {
-  background: #0056b3;
 }
