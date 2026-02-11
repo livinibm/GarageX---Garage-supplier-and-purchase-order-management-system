@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Vendor Dashboard - VendorPulse{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        {% if admin_view %}
+            <h1>Vendor Dashboard - Admin View</h1>
+            <p class="text-muted">Overview of vendor performance and operations</p>
+        {% else %}
+            <h1>Vendor Dashboard</h1>
+            <p class="text-muted">Manage catalog items and orders</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">{{ parts.count }}</h5>
+                <p class="card-text">Active Items</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">{{ purchase_orders.count }}</h5>
+                <p class="card-text">Orders</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                {% if admin_view %}
+                    <h5 class="card-title">{{ suppliers.count }}</h5>
+                    <p class="card-text">Total Vendors</p>
+                {% else %}
+                    <h5 class="card-title">{{ supplier.company_name }}</h5>
+                    <p class="card-text">Company</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Orders</h5>
+            </div>
+            <div class="card-body">
+                {% if purchase_orders %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Order Number</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in purchase_orders|slice:":5" %}
+                                <tr>
+                                    <td>{{ order.order_number }}</td>
+                                    <td>{{ order.order_date|date:"M d, Y" }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 
+                                            'primary' if order.status == 'PENDING' else
+                                            'info' if order.status == 'APPROVED' else
+                                            'warning' if order.status == 'ORDERED' else
+                                            'success' if order.status == 'RECEIVED' else
+                                            'danger'
+                                        }}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>${{ order.total_amount|default:"0.00" }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">View</button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No purchase orders found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

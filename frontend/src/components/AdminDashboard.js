@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../api';
 import './Dashboard.css';
-
-// Configure axios to use the backend URL
-const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
-  headers: {
-    'Content-Type': 'application/json',
-  }
-});
 
 const AdminDashboard = ({ user, onLogout }) => {
   const navigate = useNavigate();
@@ -21,12 +13,16 @@ const AdminDashboard = ({ user, onLogout }) => {
   const [showActivityLogs, setShowActivityLogs] = useState(false);
 
   // Navigate to other dashboards
-  const navigateToGarageDashboard = () => {
-    navigate('/garage');
+  const navigateToOpsDashboard = () => {
+    navigate('/operations');
   };
 
   const navigateToSupplierDashboard = () => {
-    navigate('/supplier');
+    navigate('/vendor');
+  };
+
+  const navigateToInventory = () => {
+    navigate('/inventory');
   };
   const [formData, setFormData] = useState({
     username: '',
@@ -43,16 +39,15 @@ const AdminDashboard = ({ user, onLogout }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const formatRole = (role) => role || 'USER';
+
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await api.get('/api/accounts/admin/users/', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await apiClient.get('/api/accounts/admin/users/');
       setUsers(response.data.data);
     } catch (err) {
       console.error('Failed to fetch users:', err);
@@ -75,10 +70,7 @@ const AdminDashboard = ({ user, onLogout }) => {
 
   const fetchActivityLogs = async () => {
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await api.get('/api/accounts/admin/activity-logs/', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await apiClient.get('/api/accounts/admin/activity-logs/');
       setActivityLogs(response.data.data);
     } catch (err) {
       console.error('Failed to fetch activity logs:', err);
@@ -87,10 +79,7 @@ const AdminDashboard = ({ user, onLogout }) => {
 
   const toggleUserStatus = async (userId) => {
     try {
-      const token = localStorage.getItem('access_token');
-      await api.patch(`/api/accounts/admin/users/${userId}/toggle/`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await apiClient.patch(`/api/accounts/admin/users/${userId}/toggle/`);
       setSuccess('User status updated successfully!');
       fetchUsers();
     } catch (err) {
@@ -100,10 +89,7 @@ const AdminDashboard = ({ user, onLogout }) => {
 
   const resetPassword = async (userId) => {
     try {
-      const token = localStorage.getItem('access_token');
-      await api.post(`/api/accounts/admin/users/${userId}/reset-password/`, passwordData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await apiClient.post(`/api/accounts/admin/users/${userId}/reset-password/`, passwordData);
       setSuccess('Password reset successfully!');
       setShowPasswordReset(false);
       setPasswordData({ new_password: '' });
@@ -129,10 +115,7 @@ const AdminDashboard = ({ user, onLogout }) => {
     setSuccess('');
 
     try {
-      const token = localStorage.getItem('access_token');
-      await api.post('/api/accounts/admin/users/', formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await apiClient.post('/api/accounts/admin/users/', formData);
       setSuccess('User created successfully!');
       setShowCreateForm(false);
       setFormData({
@@ -151,49 +134,69 @@ const AdminDashboard = ({ user, onLogout }) => {
   };
 
   return (
-    <div className="dashboard">
-      <header className="dashboard-header">
-        <h1>Admin Dashboard</h1>
-        <div className="user-info">
-          <span>Welcome, {user.first_name} {user.last_name} (Admin)</span>
-          <button onClick={onLogout}>Logout</button>
+    <div className="dashboard" style={{ background: 'var(--gray-100)', minHeight: '100vh' }}>
+      <header className="dashboard-header" style={{
+        padding: '1.25rem 2rem',
+        background: 'var(--white)',
+        borderBottom: '1px solid var(--border-color)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+      }}>
+        <h1 style={{ fontSize: '1.5rem', margin: 0, fontWeight: '700', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>VendorPulse Admin</h1>
+        <div className="user-info" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '500' }}>
+            {user.first_name} {user.last_name}
+          </span>
+          <button style={{ padding: '0.5rem 1rem', fontSize: '0.85rem', backgroundColor: 'var(--primary-blue)', color: 'white', border: 'none', borderRadius: '4px', fontWeight: '600', cursor: 'pointer' }} onClick={onLogout}>Logout</button>
         </div>
       </header>
 
       {/* Navigation to other dashboards */}
-      <nav className="dashboard-nav">
-        <div className="nav-links">
-          <button className="nav-btn active" onClick={() => {}}>
-            <i className="icon">👤</i>
-            User Management
+      <nav className="dashboard-nav" style={{
+        background: 'var(--white)',
+        padding: '0.75rem 2rem',
+        borderBottom: '1px solid var(--border-color)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <div className="nav-links" style={{ display: 'flex', gap: '0.5rem' }}>
+          <button className="nav-btn active" onClick={() => { }}>
+            Access Control
           </button>
-          <button className="nav-btn" onClick={navigateToGarageDashboard}>
-            <i className="icon">🔧</i>
-            Garage Dashboard
+          <button className="nav-btn" onClick={navigateToOpsDashboard}>
+            Operations
           </button>
           <button className="nav-btn" onClick={navigateToSupplierDashboard}>
-            <i className="icon">📦</i>
-            Supplier Dashboard
+            Vendors
+          </button>
+          <button className="nav-btn" onClick={navigateToInventory}>
+            Catalog
+          </button>
+          <button className="nav-btn" onClick={() => navigate('/scorecards')}>
+            Scorecards
           </button>
         </div>
-        <div className="nav-info">
-          <span>🔐 Admin Access: All Dashboards</span>
+        <div className="nav-info" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '500' }}>
+          🔐 Admin Access
         </div>
       </nav>
 
       <main className="dashboard-content">
         <div className="actions">
-          <button 
+          <button
             className="create-btn"
             onClick={() => setShowCreateForm(true)}
           >
-            Create New User
+            Create User
           </button>
-          <button 
+          <button
             className="logs-btn"
             onClick={openActivityLogs}
           >
-            View Activity Logs
+            View Audit Log
           </button>
         </div>
 
@@ -203,7 +206,7 @@ const AdminDashboard = ({ user, onLogout }) => {
         {showCreateForm && (
           <div className="modal">
             <div className="modal-content">
-              <h3>Create New User</h3>
+              <h3>Create User</h3>
               <form onSubmit={handleCreateUser}>
                 <div className="form-row">
                   <input
@@ -257,8 +260,8 @@ const AdminDashboard = ({ user, onLogout }) => {
                 </div>
                 <div className="form-row">
                   <select name="role" value={formData.role} onChange={handleChange}>
-                    <option value="SUPPLIER">Supplier</option>
-                    <option value="GARAGE">Garage Staff</option>
+                    <option value="SUPPLIER">Vendor</option>
+                    <option value="OPS">Ops Manager</option>
                   </select>
                 </div>
                 <div className="form-actions">
@@ -273,7 +276,7 @@ const AdminDashboard = ({ user, onLogout }) => {
         )}
 
         <div className="users-table">
-          <h2>Users</h2>
+          <h2>Team Directory</h2>
           <table>
             <thead>
               <tr>
@@ -294,8 +297,8 @@ const AdminDashboard = ({ user, onLogout }) => {
                   <td>{user.email}</td>
                   <td>{user.phone || '-'}</td>
                   <td>
-                    <span className={`role-badge ${user.role.toLowerCase()}`}>
-                      {user.role}
+                    <span className={`role-badge ${formatRole(user.role).toLowerCase()}`}>
+                      {formatRole(user.role)}
                     </span>
                   </td>
                   <td>
@@ -305,13 +308,13 @@ const AdminDashboard = ({ user, onLogout }) => {
                   </td>
                   <td>
                     <div className="action-buttons">
-                      <button 
+                      <button
                         className={`toggle-btn ${user.is_active ? 'deactivate' : 'activate'}`}
                         onClick={() => toggleUserStatus(user.id)}
                       >
                         {user.is_active ? 'Deactivate' : 'Activate'}
                       </button>
-                      <button 
+                      <button
                         className="reset-btn"
                         onClick={() => openPasswordReset(user)}
                       >
@@ -357,7 +360,7 @@ const AdminDashboard = ({ user, onLogout }) => {
         {showActivityLogs && (
           <div className="modal">
             <div className="modal-content large">
-              <h3>Activity Logs</h3>
+              <h3>Audit Log</h3>
               <div className="logs-container">
                 {activityLogs.length > 0 ? (
                   <table className="logs-table">

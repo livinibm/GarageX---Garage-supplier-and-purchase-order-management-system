@@ -1,5 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --primary-blue: #0f766e;
+  --primary-blue-hover: #0b5f57;
+  --accent-amber: #f59e0b;
+  --accent-rose: #ef4444;
+  --white: #ffffff;
+  --black: #0b1f24;
+  --gray-100: #f3f5f7;
+  --gray-200: #e5e7eb;
+  --gray-300: #cbd5e1;
+  --gray-800: #0f172a;
+
+  --bg-color: #eef2f0;
+  --surface-color: var(--white);
+  --text-primary: #0b1f24;
+  --text-secondary: #52616b;
+  --sidebar-bg: #081417;
+  --sidebar-text: var(--white);
+  --border-color: rgba(15, 23, 42, 0.12);
+  --success-color: #16a34a;
+  --danger-color: #dc2626;
+
+  --border-radius: 12px;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --shadow-sm: 0 10px 32px rgba(15, 23, 42, 0.08), 0 3px 8px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 18px 48px rgba(15, 23, 42, 0.18);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  background-image:
+    radial-gradient(circle at 10% 18%, rgba(15, 118, 110, 0.18), transparent 45%),
+    radial-gradient(circle at 88% 12%, rgba(245, 158, 11, 0.18), transparent 40%),
+    radial-gradient(circle at 50% 85%, rgba(14, 116, 144, 0.08), transparent 55%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.78), rgba(236, 242, 239, 0.9));
+  color: var(--text-primary);
+  font-family: 'Work Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
 .App {
-  text-align: center;
+  min-height: 100vh;
+  background-color: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Typography Defaults */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  font-weight: 600;
+  font-family: 'Space Grotesk', 'Work Sans', sans-serif;
+  color: var(--text-primary);
+}
+
+a {
+  color: var(--primary-blue);
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Global Utility Classes */
+.btn-primary {
+  background-color: var(--primary-blue);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  box-shadow: 0 10px 18px rgba(15, 118, 110, 0.25);
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-blue-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(15, 118, 110, 0.28);
+}
+
+.btn-secondary {
+  background-color: var(--white);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+  transition: border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 18px rgba(220, 38, 38, 0.2);
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  background-color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.16);
+}
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .loading {
@@ -8,56 +155,74 @@
   align-items: center;
   min-height: 100vh;
   font-size: 1.5rem;
-  color: #666;
+  color: var(--text-secondary);
 }
 
-.welcome-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.welcome-card h2 {
-  color: #333;
-  margin-top: 0;
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
+.soft-enter {
+  animation: floatIn 0.5s ease both;
+}
+
+.card-btn {
+  width: 100%;
+  margin-top: auto;
+  background: linear-gradient(135deg, var(--primary-blue), #1c8b7f);
+  color: var(--white);
+  border: none;
+  padding: 0.85rem 1rem;
+  border-radius: calc(var(--border-radius) - 2px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 12px 20px rgba(15, 118, 110, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(15, 118, 110, 0.28);
+}
+
+/* Old Class Mappings (for compatibility during refactor) */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
+  padding: 1.5rem;
 }
 
 .dashboard-card {
-  background: white;
+  background: var(--white);
   padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  text-align: left;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
 }
 
-.dashboard-card h3 {
-  color: #333;
-  margin-top: 0;
-}
-
-.dashboard-card p {
-  color: #666;
-  margin-bottom: 1rem;
-}
-
-.card-btn {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.card-btn:hover {
-  background: #0056b3;
+.welcome-card {
+  background: var(--surface-color);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
 }

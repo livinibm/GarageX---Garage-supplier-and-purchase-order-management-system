@@ -9,13 +9,13 @@ class IsAdmin(BasePermission):
             and request.user.profile.role == "ADMIN"
         )
 
-class IsGarageStaff(BasePermission):
-    """Only allow garage staff users"""
+class IsOpsStaff(BasePermission):
+    """Only allow ops staff users"""
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated
             and hasattr(request.user, "profile")
-            and request.user.profile.role == "GARAGE"
+            and request.user.profile.role == "OPS"
         )
 
 class IsSupplier(BasePermission):
@@ -27,13 +27,13 @@ class IsSupplier(BasePermission):
             and request.user.profile.role == "SUPPLIER"
         )
 
-class IsAdminOrGarageStaff(BasePermission):
-    """Allow admin or garage staff users"""
+class IsAdminOrOpsStaff(BasePermission):
+    """Allow admin or ops staff users"""
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated
             and hasattr(request.user, "profile")
-            and request.user.profile.role in ["ADMIN", "GARAGE"]
+            and request.user.profile.role in ["ADMIN", "OPS"]
         )
 
 class IsAdminOrSupplier(BasePermission):

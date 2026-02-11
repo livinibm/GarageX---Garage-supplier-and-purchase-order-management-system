@@ -1,0 +1,183 @@
+/* --- Variables --- */
+:root {
+    --bg-color: var(--gray-100);
+    --white: #ffffff;
+    --primary-purple: var(--primary-blue);
+    --hover-purple: var(--primary-blue-hover);
+    --danger: #dc3545;
+    --danger-hover: #c82333;
+    --text-main: var(--text-primary);
+    --text-muted: var(--text-secondary);
+    --radius: var(--border-radius);
+    --header-height: 70px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.dashboard {
+    min-height: 100vh;
+    background: transparent;
+    background-attachment: fixed;
+    padding-top: var(--header-height);
+}
+
+/* --- Header Section --- */
+.dashboard-header {
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    padding: 0 2rem;
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.logo-head {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.header-title {
+    color: var(--text-main);
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* --- Buttons --- */
+.logout-btn,
+.nav-btn {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.logout-btn {
+    background: linear-gradient(135deg, var(--primary-blue), #1c8b7f);
+    color: white;
+    box-shadow: 0 10px 18px rgba(15, 118, 110, 0.22);
+}
+
+.logout-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 24px rgba(15, 118, 110, 0.28);
+}
+
+.nav-btn {
+    background: rgba(15, 23, 42, 0.08);
+    color: var(--text-primary);
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+}
+
+.nav-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* --- Main Content --- */
+.dashboard-content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.welcome-card {
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.12), rgba(245, 158, 11, 0.1));
+    padding: 2rem;
+    border-radius: var(--radius);
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(15, 118, 110, 0.18);
+}
+
+.user-welcome {
+    display: block;
+    color: var(--primary-blue);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* --- Dashboard Grid & Cards --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.dashboard-card {
+    position: relative;
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--radius);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 32px rgba(15, 23, 42, 0.16);
+}
+
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, rgba(15, 118, 110, 0.9), rgba(245, 158, 11, 0.75));
+}
+
+.card-btn {
+    width: 100%;
+    margin-top: auto;
+    background: linear-gradient(135deg, var(--primary-blue), #1c8b7f);
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 12px 20px rgba(15, 118, 110, 0.2);
+}
+
+.card-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 28px rgba(15, 118, 110, 0.28);
+}
+
+/* --- Mobile Fixes --- */
+@media (max-width: 768px) {
+    .header-title {
+        display: none;
+    }
+}

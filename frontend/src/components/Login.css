@@ -3,22 +3,53 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: transparent;
+  padding: 2rem 1.5rem;
 }
 
 .login-form {
-  background: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
+  padding: 3rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: calc(var(--border-radius) + 4px);
+  box-shadow: var(--shadow-lg);
   width: 100%;
   max-width: 400px;
+  overflow: hidden;
+  animation: riseIn 0.6s ease both;
+}
+
+.login-form::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(15, 118, 110, 0.25), transparent 65%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.login-form::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: -60px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.22), transparent 65%);
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 .login-form h2 {
   text-align: center;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .form-group {
@@ -28,67 +59,81 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #555;
+  color: var(--text-secondary);
   font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .form-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
   font-size: 1rem;
-  transition: border-color 0.3s;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: var(--surface-color);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.16);
+  background-color: var(--white);
 }
 
 .error {
-  background: #fee;
-  color: #c33;
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--danger-color);
   padding: 0.75rem;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   margin-bottom: 1rem;
   text-align: center;
+  font-size: 0.9rem;
+  border: 1px solid var(--danger-color);
 }
 
-button {
+/* Button styles handled by global button but overriding here if needed to ensure specificity */
+.login-form button {
   width: 100%;
-  padding: 0.75rem;
-  background: #667eea;
-  color: white;
+  padding: 0.85rem;
+  background: linear-gradient(135deg, var(--primary-blue), #1c8b7f);
+  color: var(--white);
   border: none;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-weight: 600;
+  box-shadow: 0 12px 20px rgba(15, 118, 110, 0.2);
 }
 
-button:hover {
-  background: #5a6fd8;
+.login-form button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(15, 118, 110, 0.28);
 }
 
-button:disabled {
-  background: #ccc;
+.login-form button:disabled {
+  background: var(--gray-300);
   cursor: not-allowed;
 }
 
 .test-accounts {
   margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
 }
 
 .test-accounts h4 {
-  color: #666;
-  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .test-accounts p {
-  color: #888;
-  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
   margin: 0.25rem 0;
+  font-family: 'Space Grotesk', 'Work Sans', sans-serif;
 }
